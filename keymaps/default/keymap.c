@@ -15,7 +15,8 @@
 #include <stdio.h>
 #include "totem.h"
 
-// switched from US ANSI to german keycodes, as US ANSI does not have `äöüß` and US Intl. has other drawbacks, as e.g. `'"` each require a space to appear because they might be uses as key combos...
+// switched from US ANSI to german keycodes, as US ANSI does not have `äöüß` and US Intl. has other
+// drawbacks, as e.g. `'"` each require a space to appear because they might be uses as key combos...
 #include "keymap_german.h"
 
 enum totem_layers {
@@ -25,7 +26,8 @@ enum totem_layers {
     _CODE_2,
     _TEXT_1,
     _TEXT_2,
-    _GAME,
+    _GAME_1,
+    _GAME_2,
     _LOL, // is last since should not be default layer
 };
 
@@ -33,7 +35,7 @@ enum totem_layers {
 #define DF_NN_1 DF(_NAV_NUM_1)
 #define DF_CO_1 DF(_CODE_1)
 #define DF_TX_1 DF(_TEXT_1)
-#define DF_GAME DF(_GAME)
+#define DF_GM_1 DF(_GAME_1)
 
 // TODO wanted an absolute layer select, on hold L/R activate that
 // INFO LT(ly, kc) can use only basic keycodes
@@ -43,11 +45,18 @@ enum totem_layers {
 //#define LT_TX_1 LT(_LAYER_CONTROL, _TEXT_1)
 //#define LT_GAME LT(_LAYER_CONTROL, _GAME)
 
-#define OS_LCTL OSM(MOD_LCTL)
-#define OS_LSFT OSM(MOD_LSFT)
-#define OS_NN_2 OSL(_NAV_NUM_2)
-#define OS_CO_2 OSL(_CODE_2)
-#define OS_TX_2 OSL(_TEXT_2)
+// discontinued OS_ as of 2024-09-24, as accidental hits of oneshots require additional key press and
+// then delete, while in those rare cases where e.g. layer + shift must be pressed simultaneously
+// not using oneshot functionality anyway
+// #define OS_LCTL OSM(MOD_LCTL)
+// #define OS_LSFT OSM(MOD_LSFT)
+// #define OS_NN_2 OSL(_NAV_NUM_2)
+// #define OS_CO_2 OSL(_CODE_2)
+// #define OS_TX_2 OSL(_TEXT_2)
+#define MO_NN_2 MO(_NAV_NUM_2)
+#define MO_CO_2 MO(_CODE_2)
+#define MO_TX_2 MO(_TEXT_2)
+#define MO_GM_2 MO(_GAME_2)
 
 enum custom_keys {
     MA_CIRC = SAFE_RANGE,
@@ -78,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_LOL] = LAYOUT(
 // ╷         ╷         ╷         ╷         ╷         ╷         ╷╷         ╷         ╷         ╷         ╷         ╷         ╷
               XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,  XXXXXXX,   XXXXXXX,  XXXXXXX,  XXXXXXX,  
-              XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,  DF_NN_1,   DF_CO_1,  DF_TX_1,  DF_GAME,    
+              XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,  DF_NN_1,   DF_CO_1,  DF_TX_1,  DF_GM_1,    
     _______,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,  XXXXXXX,   XXXXXXX,  XXXXXXX,  XXXXXXX,  _______,
                                   XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,  XXXXXXX,   XXXXXXX
     ),
@@ -110,7 +119,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
               C(DE_X),  C(DE_C),  C(DE_A),  C(DE_V),  KC_ESC,    DE_PLUS,  DE_MINS,  DE_UNDS,  DE_DOT,   DE_SLSH,  
               KC_LALT,  KC_LEFT,  KC_UP,    KC_RGHT,  KC_TAB,    DE_9,     DE_1,     DE_2,     DE_3,     DE_4,    
     DF_CO_1,  KC_LGUI,  KC_HOME,  KC_DOWN,  KC_END,   KC_APP,    DE_ASTR,  DE_5,     DE_6,     DE_7,     DE_8,     DF_TX_1,
-                                  OS_LCTL,  KC_LSFT,  OS_NN_2,   DE_0,     KC_ENT,   KC_BSPC
+                                  KC_LCTL,  KC_LSFT,  MO_NN_2,   DE_0,     KC_ENT,   KC_BSPC
     ),
 
 /*
@@ -165,8 +174,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // ╷         ╷         ╷         ╷         ╷         ╷         ╷╷         ╷         ╷         ╷         ╷         ╷         ╷
               DE_X,     DE_H,     DE_W,     DE_V,     DE_RPRN,   DE_LPRN,  DE_COLN,  DE_UNDS,  DE_DOT,   DE_SLSH,  
               DE_S,     DE_N,     DE_R,     DE_T,     DE_M,      DE_Y,     DE_C,     DE_E,     DE_I,     DE_A,  
-    DF_NN_1,  DE_P,     DE_F,     DE_L,     DE_D,     DE_B,      DE_G,     DE_U,     DE_O,     DE_COMM,  DE_SCLN,  DF_GAME,
-                                  OS_LCTL,  OS_LSFT,  OS_CO_2,   KC_SPC,   KC_ENT,   KC_BSPC
+    DF_NN_1,  DE_P,     DE_F,     DE_L,     DE_D,     DE_B,      DE_G,     DE_U,     DE_O,     DE_COMM,  DE_SCLN,  DF_GM_1,
+                                  KC_LCTL,  KC_LSFT,  MO_CO_2,   KC_SPC,   KC_ENT,   KC_BSPC
     ),
 
  /*
@@ -182,7 +191,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    ┌─────────┼─────────┼─────────┼─────────┼─────────┼─────────┤├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┐
    │         │    ^    │    ]    │    +    │    #    │         ││    `    │    \    │    |    │    [    │    J    │  TEXT_1 │
    └─────────┴─────────┴─────────┼─────────┼─────────┼─────────┤├─────────┼─────────┼─────────┼─────────┴─────────┴─────────┘
-                                 │   CTRL  │  SHIFT  │    ▼    ││    ▼    │   TAB   │   DEL   │  
+                                 │    ▼    │    ▼    │    ▼    ││    ▼    │   TAB   │   DEL   │  
                                  └─────────┴─────────┴─────────┘└─────────┴─────────┴─────────┘
     NOTES:
     - inherited `KY"'QJ` from _CODE_2
@@ -198,7 +207,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
               XXXXXXX,  DE_PERC,  DE_AT,    DE_DLR,   DE_K,      DE_Z,     DE_DQUO,  DE_QUOT,  DE_TILD,  DE_Q,
               DE_RCBR,  DE_RABK,  DE_MINS,  DE_QUES,  DE_AMPR,   DE_ASTR,  DE_EXLM,  DE_EQL,   DE_LABK,  DE_LCBR,  
     XXXXXXX,  MA_CIRC,  DE_RBRC,  DE_PLUS,  DE_HASH,  XXXXXXX,   MA_GRV,   DE_BSLS,  DE_PIPE,  DE_LBRC,  DE_J,     DF_TX_1,
-                                  OS_LCTL,  OS_LSFT,  _______,   _______,  KC_TAB,   KC_DEL
+                                  _______,  _______,  _______,   _______,  KC_TAB,   KC_DEL
     ),
  /*
    ╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
@@ -223,8 +232,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // ╷         ╷         ╷         ╷         ╷         ╷         ╷╷         ╷         ╷         ╷         ╷         ╷         ╷
               DE_X,     DE_H,     DE_W,     DE_V,     DE_K,      DE_Z,     DE_DQUO,  DE_QUOT,  DE_DOT,   DE_Q,
               DE_S,     DE_N,     DE_R,     DE_T,     DE_M,      DE_Y,     DE_C,     DE_E,     DE_I,     DE_A,
-    DF_GAME,  DE_P,     DE_F,     DE_L,     DE_D,     DE_B,      DE_G,     DE_U,     DE_O,     DE_COMM,  DE_J,  DF_NN_1, 
-                                  OS_LCTL,  OS_LSFT,  OS_TX_2,   KC_SPC,   KC_ENT,   KC_BSPC
+    DF_GM_1,  DE_P,     DE_F,     DE_L,     DE_D,     DE_B,      DE_G,     DE_U,     DE_O,     DE_COMM,  DE_J,  DF_NN_1, 
+                                  KC_LCTL,  KC_LSFT,  MO_TX_2,   KC_SPC,   KC_ENT,   KC_BSPC
     ),
  /*
    ╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
@@ -239,7 +248,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    ┌─────────┼─────────┼─────────┼─────────┼─────────┼─────────┤├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┐
    │  CODE_1 │    ^    │    ]    │    +    │    #    │    ´    ││    `    │    Ü    │    Ö    │    [    │    ;    │         │
    └─────────┴─────────┴─────────┼─────────┼─────────┼─────────┤├─────────┼─────────┼─────────┼─────────┴─────────┴─────────┘
-                                 │   CTRL  │  SHIFT  │    ▼    ││    ▼    │   TAB   │   DEL   │  
+                                 │    ▼    │    ▼    │    ▼    ││    ▼    │   TAB   │   DEL   │  
                                  └─────────┴─────────┴─────────┘└─────────┴─────────┴─────────┘
     NOTES:
     - umlaut above bases (obviously), else from coding positions
@@ -253,7 +262,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
               DE_DEG,   DE_PERC,  DE_AT,    DE_EURO,  DE_RPRN,   DE_LPRN,  DE_COLN,  DE_UNDS,  DE_TILD,  DE_SLSH,
               DE_SS,    DE_RABK,  DE_MINS,  DE_QUES,  DE_AMPR,   DE_ASTR,  DE_EXLM,  DE_EQL,   DE_LABK,  DE_ADIA,  
     DF_CO_1,  DE_CIRC,  DE_RBRC,  DE_PLUS,  DE_HASH,  DE_ACUT,   DE_GRV,   DE_UDIA,  DE_ODIA,  DE_LBRC,  DE_SCLN,  XXXXXXX,
-                                  OS_LCTL,  OS_LSFT,  _______,   _______,  KC_TAB,   KC_DEL
+                                  _______,  _______,  _______,   _______,  KC_TAB,   KC_DEL
     ),
 /*
    ╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
@@ -268,18 +277,44 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    ┌─────────┼─────────┼─────────┼─────────┼─────────┼─────────┤├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┐
    │  TEXT_1 │   CTRL  │    Y    │    S    │    C    │    V    ││    →    │   F5    │   F6    │   F7    │   F8    │  CODE_1 │
    └─────────┴─────────┴─────────┼─────────┼─────────┼─────────┤├─────────┼─────────┼─────────┼─────────┴─────────┴─────────┘
-                                 │   ALT   │  SPACE  │         ││   ESC   │  ENTER  │   DEL   │  
+                                 │   ALT   │  SPACE  │  GAME_2 ││   ESC   │  ENTER  │   DEL   │  
                                  └─────────┴─────────┴─────────┘└─────────┴─────────┴─────────┘
     NOTES:
     - swapped WS down to be more comfortable
 */ 
 
-    [_GAME] = LAYOUT(
+    [_GAME_1] = LAYOUT(
 // ╷         ╷         ╷         ╷         ╷         ╷         ╷╷         ╷         ╷         ╷         ╷         ╷         ╷
               KC_TAB,   DE_Q,     DE_X,     DE_E,     DE_R,      KC_MPRV,  KC_F9,    KC_F10,   KC_F11,   KC_F12,   
               KC_LSFT,  DE_A,     DE_W,     DE_D,     DE_F,      KC_MPLY,  KC_F1,    KC_F2,    KC_F3,    KC_F4,
     DF_TX_1,  KC_LCTL,  DE_Y,     DE_S,     DE_C,     DE_V,      KC_MNXT,  KC_F5,    KC_F6,    KC_F7,    KC_F8,    DF_CO_1,
-                                  KC_LALT,  KC_SPC,   XXXXXXX,   KC_ESC,   KC_ENT,   KC_DEL  
+                                  KC_LALT,  KC_SPC,   MO_GM_2,   KC_ESC,   KC_ENT,   KC_DEL  
+    ),
+/*
+   ╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+   
+   ┌─────────────────────────────────────────────────┐
+   │ Game (Secondary)                                │      ╭╮╭╮╭╮╭╮
+   └─────────────────────────────────────────────────┘      │╰╯╰╯╰╯│
+             ┌─────────┬─────────┬─────────┬─────────┬──────╨──┐┌──╨──────┬─────────┬─────────┬─────────┬─────────┐
+     ╌┄┈┈───═╡         │    H    │         │         │    K    ││    +    │    -    │         │         │         │   
+             ├─────────┼─────────┼─────────┼─────────┼─────────┤├─────────┼─────────┼─────────┼─────────┼─────────┤
+             │         │    N    │         │    T    │    M    ││    9    │    1    │    2    │    3    │    4    │   
+   ┌─────────┼─────────┼─────────┼─────────┼─────────┼─────────┤├─────────┼─────────┼─────────┼─────────┼─────────┼─────────┐
+   │         │    P    │         │    L    │         │    B    ││         │    5    │    6    │    7    │    8    │         │
+   └─────────┴─────────┴─────────┼─────────┼─────────┼─────────┤├─────────┼─────────┼─────────┼─────────┴─────────┴─────────┘
+                                 │   CTRL  │  SHIFT  │    ▼    ││    0    │         │         │  
+                                 └─────────┴─────────┴─────────┘└─────────┴─────────┴─────────┘
+    NOTES:
+    - missing: i, g, u, o, j
+*/ 
+
+    [_GAME_2] = LAYOUT(
+// ╷         ╷         ╷         ╷         ╷         ╷         ╷╷         ╷         ╷         ╷         ╷         ╷         ╷
+              XXXXXXX,  DE_H,     XXXXXXX,  XXXXXXX,  DE_K,      DE_PLUS,  DE_MINS,  XXXXXXX,  XXXXXXX,  XXXXXXX,   
+              XXXXXXX,  DE_N,     XXXXXXX,  DE_T,     DE_M,      DE_9,     DE_1,     DE_2,     DE_3,     DE_4,
+    XXXXXXX,  DE_P,     XXXXXXX,  DE_L,     XXXXXXX,  DE_B,      XXXXXXX,  DE_5,     DE_6,     DE_7,     DE_8,     XXXXXXX,
+                                  KC_LCTL,  KC_LSFT,  _______,   DE_0,     XXXXXXX,   XXXXXXX  
     )
 };
 
