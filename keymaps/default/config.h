@@ -21,5 +21,9 @@ for more options.
 
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
-//#define NO_ACTION_ONESHOT
+// TODO? #undef SPLIT_USB_DETECT -- at least if MASTER_X is defined???
+// OR:
+//   #define SPLIT_USB_TIMEOUT 10000
+//   #define SPLIT_USB_TIMEOUT_POLL 10
+#define NO_ACTION_ONESHOT
 
